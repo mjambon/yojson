@@ -151,7 +151,7 @@
 
   let map_lexeme f lexbuf =
     let len = lexbuf.lex_curr_pos - lexbuf.lex_start_pos in
-    f (Bytes.to_string lexbuf.lex_buffer) lexbuf.lex_start_pos len
+    f (Bytes.sub_string lexbuf.lex_buffer lexbuf.lex_start_pos len) lexbuf.lex_start_pos len
 
   type variant_kind = [ `Edgy_bracket | `Square_bracket | `Double_quote ]
   type tuple_kind = [ `Parenthesis | `Square_bracket ]
