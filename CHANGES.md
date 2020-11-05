@@ -12,6 +12,7 @@
 - Removed `yojson-biniou` library
 - Removed deprecated `json` type aliasing type `t` which has been available
   since 1.6.0 (@Leonidas-from-XIV, #100).
+- Removed `json_max` type (@Leonidas-from-XIV, #103)
 
 ### Fix
 
