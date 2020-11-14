@@ -231,20 +231,16 @@ rule read_json v = parse
                    try
                      read_space v lexbuf;
                      read_object_end lexbuf;
-                     let field_name = read_ident v lexbuf in
-                     read_space v lexbuf;
-                     read_colon v lexbuf;
-                     read_space v lexbuf;
-                     acc := (field_name, read_json v lexbuf) :: !acc;
                      while true do
-                       read_space v lexbuf;
-                       read_object_sep v lexbuf;
-                       read_space v lexbuf;
                        let field_name = read_ident v lexbuf in
                        read_space v lexbuf;
                        read_colon v lexbuf;
                        read_space v lexbuf;
                        acc := (field_name, read_json v lexbuf) :: !acc;
+                       read_space v lexbuf;
+                       read_object_sep v lexbuf;
+                       read_space v lexbuf;
+                       read_object_end lexbuf;
                      done;
                      assert false
                    with End_of_object ->
@@ -255,12 +251,12 @@ rule read_json v = parse
                    try
                      read_space v lexbuf;
                      read_array_end lexbuf;
-                     acc := read_json v lexbuf :: !acc;
                      while true do
+                       acc := read_json v lexbuf :: !acc;
                        read_space v lexbuf;
                        read_array_sep v lexbuf;
                        read_space v lexbuf;
-                       acc := read_json v lexbuf :: !acc;
+                       read_array_end lexbuf;
                      done;
                      assert false
                    with End_of_array ->
@@ -676,20 +672,16 @@ and read_abstract_fields read_key read_field init_acc v = parse
                try
                  read_space v lexbuf;
                  read_object_end lexbuf;
-                 let field_name = read_key v lexbuf in
-                 read_space v lexbuf;
-                 read_colon v lexbuf;
-                 read_space v lexbuf;
-                 acc := read_field !acc field_name v lexbuf;
                  while true do
-                   read_space v lexbuf;
-                   read_object_sep v lexbuf;
-                   read_space v lexbuf;
                    let field_name = read_key v lexbuf in
                    read_space v lexbuf;
                    read_colon v lexbuf;
                    read_space v lexbuf;
                    acc := read_field !acc field_name v lexbuf;
+                   read_space v lexbuf;
+                   read_object_sep v lexbuf;
+                   read_space v lexbuf;
+                   read_object_end lexbuf;
                  done;
                  assert false
                with End_of_object ->
@@ -761,20 +753,15 @@ and skip_json v = parse
   | '{'          { try
                      read_space v lexbuf;
                      read_object_end lexbuf;
-                     skip_ident v lexbuf;
-                     read_space v lexbuf;
-                     read_colon v lexbuf;
-                     read_space v lexbuf;
-                     skip_json v lexbuf;
                      while true do
-                       read_space v lexbuf;
-                       read_object_sep v lexbuf;
                        read_space v lexbuf;
                        skip_ident v lexbuf;
                        read_space v lexbuf;
                        read_colon v lexbuf;
                        read_space v lexbuf;
                        skip_json v lexbuf;
+                       read_space v lexbuf;
+                       read_object_sep v lexbuf;
                      done;
                      assert false
                    with End_of_object ->
@@ -784,12 +771,12 @@ and skip_json v = parse
   | '['          { try
                      read_space v lexbuf;
                      read_array_end lexbuf;
-                     skip_json v lexbuf;
                      while true do
+                       skip_json v lexbuf;
                        read_space v lexbuf;
                        read_array_sep v lexbuf;
                        read_space v lexbuf;
-                       skip_json v lexbuf;
+                       read_array_end lexbuf;
                      done;
                      assert false
                    with End_of_array ->
